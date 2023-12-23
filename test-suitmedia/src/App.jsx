@@ -1,11 +1,17 @@
-import { useState } from "react";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+// import Ideas from "./pages/Ideas";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello Suitmedia</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Header />}>
+          <Route index element={<Hero />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
