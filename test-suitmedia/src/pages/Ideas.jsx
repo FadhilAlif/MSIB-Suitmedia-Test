@@ -99,12 +99,12 @@ const Ideas = () => {
               </div>
             </form>
           </div>
-          <div className="d-flex flex-wrap gap-5 justify-content-center">
+          <div className="d-flex flex-wrap gap-5 justify-content-center mb-5">
             {posts.map((post) => (
               <Card
                 key={post.id}
-                className="card"
-                style={{ width: "18rem", height: "20rem"}}
+                className="card border-1 shadow-sm"
+                style={{ width: "18rem", height: "20rem" }}
               >
                 <Card.Img
                   variant="top"
@@ -112,11 +112,35 @@ const Ideas = () => {
                   alt={post.title}
                 />
                 <Card.Body>
-                  <span>{formatDate(post.published_at)}</span>
+                  <span className="text-muted">
+                    {formatDate(post.published_at)}
+                  </span>
                   <Card.Text className="fw-bold fs-5">{post.title}</Card.Text>
                 </Card.Body>
               </Card>
             ))}
+          </div>
+          <div className="d-flex justify-content-center">
+            <Button
+              style={{ backgroundColor: "#ff6600", borderColor: "#ff6600" }} // Mengganti warna menjadi #ff6600
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </Button>
+            <span
+              className="py-2 mx-3 text-center"
+              style={{ color: "#ff6600" }}
+            >
+              {currentPage}
+            </span>
+            <Button
+              style={{ backgroundColor: "#ff6600", borderColor: "#ff6600" }} // Mengganti warna menjadi #ff6600
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === Math.ceil(totalItems / itemsPerPage)}
+            >
+              Next
+            </Button>
           </div>
         </div>
       </div>
