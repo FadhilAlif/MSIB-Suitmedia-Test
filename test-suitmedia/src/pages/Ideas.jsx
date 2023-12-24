@@ -1,33 +1,67 @@
 import React, { useEffect, useState } from "react";
-import { fetchIdeas } from "../api/IdeasData";
 import Hero from "../components/Hero";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import axios from "axios";
 import "../global.css";
 
 const Ideas = () => {
-  const [ideas, setIdeas] = useState([]);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [sortBy, setSortBy] = useState("id:asc");
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(
+    localStorage.getItem("currentPage")
+      ? JSON.parse(localStorage.getItem("currentPage"))
+      : 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    localStorage.getItem("itemsPerPage")
+      ? JSON.parse(localStorage.getItem("itemsPerPage"))
+      : 10
+  );
+  const [sortOrder, setSortOrder] = useState(
+    localStorage.getItem("sortOrder")
+      ? JSON.parse(localStorage.getItem("sortOrder"))
+      : "published_at"
+  );
+  const [loading, setLoading] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    return date.toLocaleDateString("en-US", options);
+  };
 
   useEffect(() => {
-    const fetchDataApi = async () => {
+    const fetchIdeasData = async () => {
+      setLoading(true);
       try {
-        const res = await fetchIdeas({
-          pageNumber: pageNumber,
-          pageSize: perPage,
-          pageSort: sortBy,
+        const response = await axios.get(
+          `https://suitmedia-backend.suitdev.com/api/ideas?page[number]=${currentPage}&page[size]=${itemsPerPage}&append[]=small_image&append[]=medium_image&sort=${sortOrder}`
+        );
+        console.log(response.data);
+        const modifiedPosts = response.data.data.map((post) => {
+          return {
+            ...post,
+            published_at: formatDate(post.published_at),
+          };
         });
-        setIdeas(res);
-        console.log("ideas res :", res);
+
+        setPosts(modifiedPosts);
+        setTotalItems(response.data.meta.total);
+        setLoading(false);
       } catch (error) {
-        console.log("Error fetch ideas", error);
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     };
-    fetchDataApi();
-  });
+
+    fetchIdeasData();
+  }, [currentPage, itemsPerPage, sortOrder]);
 
   return (
     <div>
@@ -65,16 +99,24 @@ const Ideas = () => {
               </div>
             </form>
           </div>
-          <div className="d-flex flex-wrap gap-5 justify-content-between">
-            <Card className="card" style={{ width: "18rem", height: "20rem" }}>
-              <Card.Img variant="top" src="/suitmedialogo.png" />
-              <Card.Body>
-                <span>date 20202</span>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                </Card.Text>
-              </Card.Body>
-            </Card>
+          <div className="d-flex flex-wrap gap-5 justify-content-center">
+            {posts.map((post) => (
+              <Card
+                key={post.id}
+                className="card"
+                style={{ width: "18rem", height: "20rem"}}
+              >
+                <Card.Img
+                  variant="top"
+                  src={post.small_image[0].url}
+                  alt={post.title}
+                />
+                <Card.Body>
+                  <span>{formatDate(post.published_at)}</span>
+                  <Card.Text className="fw-bold fs-5">{post.title}</Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
