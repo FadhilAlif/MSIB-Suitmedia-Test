@@ -23,7 +23,7 @@ const Ideas = () => {
     };
   });
 
-  return <div></div>;
+  return <div>o</div>;
 };
 
 export default Ideas;

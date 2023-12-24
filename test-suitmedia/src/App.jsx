@@ -8,7 +8,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Header />}>
-          <Route index element={<Hero />} />
         </Route>
       </Routes>
     </BrowserRouter>
