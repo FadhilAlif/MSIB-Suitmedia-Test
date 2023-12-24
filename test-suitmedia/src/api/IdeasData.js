@@ -11,6 +11,9 @@ export const fetchIdeas = async (pageNumber, pageSize, pageSort) => {
         append: ["small_image", "medium_image"],
         sort: pageSort,
       },
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     return response.data.data;
   } catch (error) {

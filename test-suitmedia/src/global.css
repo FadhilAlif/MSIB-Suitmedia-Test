@@ -8,6 +8,19 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .nav-link {
   position: relative;
   text-decoration: none;
@@ -21,16 +34,21 @@ body {
   left: 0;
   width: 0;
   height: 3px;
-  background-color: white;
-  transition: width 0.3s ease;
-  -webkit-transition: width 0.3s ease;
-  -moz-transition: width 0.3s ease;
-  -ms-transition: width 0.3s ease;
-  -o-transition: width 0.3s ease;
+  background-color: transparent;
+  transition: width 0.4s ease, background-color 0.3s ease;
+  -webkit-transition: width 0.4s ease, background-color 0.3s ease;
+  -moz-transition: width 0.4s ease, background-color 0.3s ease;
+  -ms-transition: width 0.4s ease, background-color 0.3s ease;
+  -o-transition: width 0.4s ease, background-color 0.3s ease;
 }
 
 .nav-link:hover::after {
   width: 100%;
-  animation: 0.3s ease-in-out;
-  -webkit-animation: 0.3s ease-in-out;
+  background-color: white;
+}
+
+.nav-link.active::after {
+  background-color: white;
+  text-decoration: underline;
+  width: 100%;
 }
